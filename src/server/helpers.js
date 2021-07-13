@@ -111,6 +111,7 @@ class ServerHelper {
     log4js.configure({
       appenders: {
         App: { type: 'console' },
+        Fabric_Manager: { type: 'console' },
         Upload_Manager: { type: 'console' },
         Socket_Manager: { type: 'console' },
         Token_Manager: { type: 'console' },
@@ -118,6 +119,7 @@ class ServerHelper {
       },
       categories: {
         default: { appenders: ['App'], level: 'trace' },
+        Fabric_Manager: { appenders: ['Fabric_Manager'], level: 'trace' },
         Upload_Manager: { appenders: ['Upload_Manager'], level: 'trace' },
         Socket_Manager: { appenders: ['Socket_Manager'], level: 'trace' },
         Token_Manager: { appenders: ['Token_Manager'], level: 'trace' },
@@ -126,6 +128,7 @@ class ServerHelper {
     });
     // Global Logger variables for logging
     global.appLogger = log4js.getLogger('App');
+    global.fabricLogger = log4js.getLogger('Fabric_Manager');
     global.uploadLogger = log4js.getLogger('Upload_Manager');
     global.socketLogger = log4js.getLogger('Socket_Manager');
     global.tokenLogger = log4js.getLogger('Token_Manager');

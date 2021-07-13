@@ -14,7 +14,7 @@ import Service from '../../services';
 import async from "async";
 import UniversalFunctions from "../../utils/universalFunctions";
 import TokenManager from '../../lib/tokenManager';
-
+import FabricManager from '../../lib/fabricManager';
 const CodeGenerator = require("../../lib/codeGenerator");
 const ERROR = UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.ERROR;
 const _ = require("underscore");
@@ -104,6 +104,15 @@ const createUser = (payloadData, callback) => {
             cb();
           }
         });
+      },
+      // Register app user to Hyperledger Fabric
+      (cb) => {
+        try {
+          FabricManager.registerFabricUser(customerData._id);
+          return cb();
+        } catch (err) {
+          cb(err);
+        }
       },
       //  (cb) => {
       //     //Send SMS to User
@@ -227,6 +236,9 @@ const loginUser = (payloadData, callback) => {
   var successLogin = false;
   var updatedUserDetails = null;
   var appVersion = null;
+  let smartContract;
+  let data;
+
   async.series(
     [
       (cb) => {
@@ -252,9 +264,11 @@ const loginUser = (payloadData, callback) => {
               UniversalFunctions.CryptData(payloadData.password)
             ) {
               cb(ERROR.INCORRECT_PASSWORD);
-            } else if (userFound.emailVerified == false) {
-              cb(ERROR.NOT_REGISTERED);
-            } else {
+            } 
+            // else if (userFound.emailVerified == false) {
+            //   cb(ERROR.NOT_REGISTERED);
+            // } 
+            else {
               successLogin = true;
               cb();
             }
@@ -300,6 +314,15 @@ const loginUser = (payloadData, callback) => {
           });
         } else cb(ERROR.IMP_ERROR);
       },
+      async (cb) => {
+        try {
+          smartContract = await FabricManager.connectHyperledgerGateWay(userFound._id);
+          return cb();
+
+        } catch(err) {
+          return cb(err);
+        }
+      },
       (cb) => {
         appVersion = {
           latestIOSVersion: 100,
@@ -308,7 +331,13 @@ const loginUser = (payloadData, callback) => {
           criticalIOSVersion: 100
         };
         cb(null);
-      }
+      },
+      async (cb) => {
+          data = await FabricManager.getAllCerts(smartContract);
+          if (data.err) return cb(err);
+
+          return cb();
+      },
     ],
     (err, data) => {
       if (err) callback(err);
@@ -316,7 +345,8 @@ const loginUser = (payloadData, callback) => {
         callback(null, {
           accessToken: accessToken,
           userDetails: UniversalFunctions.deleteUnnecessaryUserData(userFound),
-          appVersion: appVersion
+          appVersion: appVersion,
+          data
         });
       }
     }
