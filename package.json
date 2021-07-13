@@ -1,7 +1,7 @@
 {
-  "name": "user-onboarding-module",
+  "name": "hyperledger-fabric-user-onboarding",
   "main": "src/entry.js",
-  "description": "A Node based module using Mongodb to onboard user's into a very basic application, secured using JWT authorization",
+  "description": "A Node based module using Mongodb to onboard user's into a very basic application, secured using JWT authorization with Hyperledger Fabric integration",
   "version": "1.1.0",
   "private": false,
   "engines": {
@@ -25,6 +25,8 @@
     "crypto-random-string": "3.3.0",
     "dotenv": "8.2.0",
     "express": "4.17.1",
+    "fabric-ca-client": "^2.2.8",
+    "fabric-network": "^2.2.8",
     "fluent-ffmpeg": "2.1.2",
     "fs": "0.0.1-security",
     "fs-extra": "9.1.0",
@@ -48,7 +50,7 @@
     "underscore": "1.12.1",
     "validator": "13.5.2"
   },
-  "author": "Sanchit Dang",
+  "author": "Sanchit Dang & Jason Pham",
   "license": "Apache-2.0",
   "devDependencies": {
     "@babel/cli": "^7.13.10",
