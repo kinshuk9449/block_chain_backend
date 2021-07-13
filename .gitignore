@@ -16,7 +16,7 @@
 /.idea
 
 # hyperledger dependencies
-/wallet
+wallet/
 /organizations
 
 # https://www.npmjs.com/package/dotenv#should-i-commit-my-env-file

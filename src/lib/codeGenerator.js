@@ -32,7 +32,7 @@ const generateRandomNumbers = (numberLength, excludeList) => {
     let minNumber = parseInt(minString);
     let maxNumber = parseInt(maxString);
     //Create list
-    for (i = minNumber; i < maxNumber; i++) {
+    for (let i = minNumber; i < maxNumber; i++) {
         let digitToCheck = i.toString();
         if (digitToCheck.length < numberLength) {
             let diff = numberLength - digitToCheck.length;
