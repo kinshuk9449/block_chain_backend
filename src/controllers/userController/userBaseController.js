@@ -39,7 +39,7 @@ const createUser = (payloadData, callback) => {
             if (data && data.length > 0) {
               if (data[0].emailVerified == true) cb(ERROR.USER_ALREADY_REGISTERED);
               else {
-                Service.UserService.deleteUser({ _id: data[0]._id }, (err, updatedData) => {
+                Service.UserService.deleteRecord({ _id: data[0]._id }, (err, updatedData) => {
                   if (err) cb(err);
                   else cb(null);
                 });
@@ -236,8 +236,7 @@ const loginUser = (payloadData, callback) => {
   var successLogin = false;
   var updatedUserDetails = null;
   var appVersion = null;
-  let smartContract;
-  let data;
+  let gateWayResponse;
 
   async.series(
     [
@@ -316,7 +315,8 @@ const loginUser = (payloadData, callback) => {
       },
       async (cb) => {
         try {
-          smartContract = await FabricManager.connectHyperledgerGateWay(userFound._id);
+          gateWayResponse = await FabricManager.connectHyperledgerGateWay(userFound._id);
+          if (gateWayResponse.error) throw new Error(gateWayResponse.error);
           return cb();
 
         } catch(err) {
@@ -332,21 +332,14 @@ const loginUser = (payloadData, callback) => {
         };
         cb(null);
       },
-      async (cb) => {
-          data = await FabricManager.getAllCerts(smartContract);
-          if (data.err) return cb(err);
-
-          return cb();
-      },
     ],
-    (err, data) => {
+    (err) => {
       if (err) callback(err);
       else {
         callback(null, {
           accessToken: accessToken,
           userDetails: UniversalFunctions.deleteUnnecessaryUserData(userFound),
           appVersion: appVersion,
-          data
         });
       }
     }

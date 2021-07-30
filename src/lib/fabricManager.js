@@ -1,3 +1,8 @@
+/**
+ * Created by Jason Pham 
+ * thienhtpham@gmail.com
+ */
+
 import 'dotenv/config';
 import {Gateway, Wallets} from 'fabric-network';
 import path from 'path';
@@ -161,6 +166,8 @@ const registerFabricUser = async (userId) => {
  */
 const connectHyperledgerGateWay = async (userId) => {
   try {
+    let gateway, network, contract;
+
     if (wallet) {
       // load the network configuration
       const ccpPath = path.resolve(__dirname, '..', '..', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json'); //Need change!!!!!!
@@ -174,24 +181,17 @@ const connectHyperledgerGateWay = async (userId) => {
       wallet = await Wallets.newFileSystemWallet(WALLET_PATH);
       fabricLogger.info(`Wallet path: ${WALLET_PATH}`);
 
-
-      // 1. register & enroll admin user with CA, stores admin identity in local wallet
-      // await enrollAdmin.EnrollAdminUser();
-
-      // 2. register & enroll application user with CA, which is used as client identify to make chaincode calls, stores app user identity in local wallet
-      // await registerUser.RegisterAppUser();
-
       // Check to see if app user exist in wallet.
       const identity = await wallet.get(userId);
 
       if (!identity) {
         fabricLogger.error(`An identity for the user does not exist in the wallet: ${userId}`);
-        return;
+        throw new Error(`An identity for the user does not exist in the wallet: ${userId}`);
       }
 
       //3. Prepare to call chaincode using fabric javascript node sdk
       // Create a new gateway for connecting to our peer node.
-      const gateway = new Gateway();
+      gateway = new Gateway();
       await gateway.connect(ccp, {
         wallet,
         identity: identity,
@@ -201,16 +201,18 @@ const connectHyperledgerGateWay = async (userId) => {
 
       try {
         // Get the network (channel) our contract is deployed to.
-        const network = await gateway.getNetwork(CHANNEL);
+        network = await gateway.getNetwork(CHANNEL);
+        if (!network) throw new Error("Cannot get Fabric network")
 
         // Get the contract from the network.
-        const contract = network.getContract(CHAINCODE);
+        contract = network.getContract(CHAINCODE);
 
         // Initialize the chaincode by calling its InitLedger function
         // fabricLogger.info('Submit Transaction: InitLedger to create the very first cert');
         // await contract.submitTransaction('InitLedger');
       } catch (err) {
         fabricLogger.error(err);
+        return err;
       }
     }
 
@@ -226,6 +228,7 @@ const connectHyperledgerGateWay = async (userId) => {
   }
 }
 
+// Example chaincode invocation
 const getAllCerts = async (contract) => {
   
   try {
