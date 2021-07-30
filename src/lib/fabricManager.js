@@ -45,6 +45,7 @@ let wallet;
  const enrollFabricAdmin = async () => {
   try {
     // load the network configuration
+    // provide the path to where your connection-<orgName>.json file is
     const ccpPath = path.resolve(__dirname, '..', '..', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
     const fileExists = fs.existsSync(ccpPath);
     if (!fileExists) {
@@ -95,6 +96,7 @@ let wallet;
 const registerFabricUser = async (userId) => {
   try {
     // load the network configuration
+    // provide the path to where your connection-<orgName>.json file is
     const ccpPath = path.resolve(__dirname, '..', '..', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
     const fileExists = fs.existsSync(ccpPath);
     if (!fileExists) {
@@ -170,7 +172,8 @@ const connectHyperledgerGateWay = async (userId) => {
 
     if (wallet) {
       // load the network configuration
-      const ccpPath = path.resolve(__dirname, '..', '..', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json'); //Need change!!!!!!
+      // provide the path to where your connection-<orgName>.json file is
+      const ccpPath = path.resolve(__dirname, '..', '..', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
       const fileExists = fs.existsSync(ccpPath);
       if (!fileExists) {
         throw new Error(`no such file or directory: ${ccpPath}`);

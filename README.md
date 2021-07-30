@@ -9,8 +9,8 @@ PS : This is an ES6 translation of this [project](https://github.com/ChoudharyNa
 
 # Contents
 
-* [Hyperledger Fabric Setup](#fabric-setup)
 * [Manual Deployment](#manual-deployment)
+* [Hyperledger Fabric Setup](#fabric-setup)
 * [Upload Image/Document Guidelines](UPLOAD_IMAGE_GUIDLINE.md)
 
 # Project Dependencies
@@ -105,7 +105,7 @@ The `connection-org1.json` file configure the connection to the running Fabric n
 
 ## Setup Fabric constants
 
-Navigate to the .env file and modify the constants according to your Fabric network configuration
+Navigate to the `.env` file and modify the constants' values according to your Fabric network configuration
 ```
 CA_ADMIN_ID = " <Your admin ID configured with your CA> " // Ex: admin
 CA_ADMIN_PWD = " <Password of the admin> " // Ex: adminpw
