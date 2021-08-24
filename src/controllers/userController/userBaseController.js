@@ -316,7 +316,6 @@ const loginUser = (payloadData, callback) => {
       async (cb) => {
         try {
           gateWayResponse = await FabricManager.connectHyperledgerGateWay(userFound._id);
-          if (gateWayResponse.error) throw new Error(gateWayResponse.error);
           return cb();
 
         } catch(err) {

@@ -11,14 +11,19 @@
  * - FATAL - ‘magenta’
  */
 
+import FabricManager from '../../lib/fabricManager';
+
 /**
  * 
  * @param {Object} payload 
  * @param {String} payload.message 
  * @param {Function} callback 
  */
-const demoFunction = (payload, callback) => {
-  appLogger.info(payload.message);
+const demoFunction = async (payload, callback) => {
+  const result = await FabricManager.getClientId();
+  const certs = await FabricManager.getAllCerts();
+  appLogger.info({result});
+  appLogger.info({certs});
   return callback(null, payload);
 };
 
