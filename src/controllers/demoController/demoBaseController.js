@@ -20,10 +20,12 @@ import FabricManager from '../../lib/fabricManager';
  * @param {Function} callback 
  */
 const demoFunction = async (payload, callback) => {
-  const result = await FabricManager.getClientId();
-  const certs = await FabricManager.getAllCerts();
-  appLogger.info({result});
-  appLogger.info({certs});
+  // const result = await FabricManager.getClientId();
+  // const certs = await FabricManager.getAllCerts();
+  const resuts = await FabricManager.submitTransactions('MintWithTokenURI','104','https://example.com/nft101.json');
+  appLogger.info({resuts});
+  // appLogger.info({result});
+  // appLogger.info({certs});
   return callback(null, payload);
 };
 

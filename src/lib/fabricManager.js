@@ -65,6 +65,7 @@ class FabricManager {
         }
         const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
 
+        
         // Create a new file system based wallet for managing identities.
         wallet = await Wallets.newFileSystemWallet(WALLET_PATH);
         fabricLogger.info(`Wallet path: ${WALLET_PATH}`);
@@ -138,6 +139,8 @@ class FabricManager {
       const ca = new FabricCAServices(caInfo.url, { trustedRoots: caTLSCACerts, verify: false }, caInfo.caName);
 
       // Create a new  wallet : Note that wallet can be resfor managing identities.
+      console.log(WALLET_PATH);
+      console.log(Wallets);
       wallet = await Wallets.newFileSystemWallet(WALLET_PATH);
 
       // Check to see if we've already enrolled the admin user.
@@ -240,28 +243,51 @@ class FabricManager {
   }
 
   // Example chaincode invocation
-  getClientId = async () => {
+  // getClientId = async () => {
+  //   try {
+  //     let result = await ercContract.evaluateTransaction('ClientAccountID');
+  //     return result.toString('utf8');
+  //     // return result;
+  //   } catch (err) {
+  //     fabricLogger.info(`Error when get identity: ${err}`);
+  //     return err;
+  //   }
+  // }
+
+  evaluateTransactions = async (functionName, ...args) =>{
     try {
-      let result = await ercContract.evaluateTransaction('ClientAccountID');
-      return result.toString('utf8');
-      // return result;
-    } catch (err) {
+
+      let result = await ercContract.evaluateTransaction("'"+functionName+"("+args+")'")
+      return result;
+    }catch (err) {
       fabricLogger.info(`Error when get identity: ${err}`);
       return err;
     }
   }
 
-  // Example chaincode invocation
-  getAllCerts = async () => {
+  submitTransactions = async (functionName, ...args) =>{
     try {
-      let result = await certContract.evaluateTransaction('GetAllCerts');
-      // return result.toString('utf8');
+
+      let result = await ercContract.submitTransaction("'"+functionName+"("+args+")'")
       return result;
-    } catch (err) {
-      fabricLogger.info(`Error when get all certificates: ${err}`);
+    }catch (err) {
+      fabricLogger.info(`Error when get identity: ${err}`);
       return err;
     }
   }
+  // Example chaincode invocation
+  // getAllCerts = async () => {
+  //   try {
+  //     let result = await certContract.evaluateTransaction('GetAllCerts');
+  //     // return result.toString('utf8');
+  //     return result;
+  //   } catch (err) {
+  //     fabricLogger.info(`Error when get all certificates: ${err}`);
+  //     return err;
+  //   }
+  // }
+
+  
 }
 
 const instance = new FabricManager();
